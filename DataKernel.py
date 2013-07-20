@@ -19,6 +19,8 @@ class DataKernel():
         self.paras = paras
         self.path = path
 
+        self.tableType = {'Acce':'Acceleration', 'Obli':'Obliquitous', 'Strain':'Strain'}
+
         self.dtTable = {}
 
     def Connect(self):
@@ -58,7 +60,7 @@ class DataKernel():
         data = {}
         for i in range(len(exists)):
             data[exists[i][-8:]] = self.GetChdata(chStart, chEnd, exists[i])
-            self.Write(data[exists[i][-8:]], exists[i][-8:], self.sensType)
+            self.Write(data[exists[i][-8:]], exists[i][-8:])
             del data[exists[i][-8:]]
 
         return 'OK'
@@ -81,7 +83,7 @@ class DataKernel():
         cursor = conn.cursor()
 
         cmd = "select [name] from sys.tables where name between " + \
-            "'Acceleration{0}' and 'Acceleration{1}'".format(start, end)
+            "'{0}' and '{1}'".format(self.tableType[self.sensType] + start, self.tableType[self.sensType] + end)
         try:
             cursor.execute(cmd)
         except pyodbc.OperationalError:
@@ -157,7 +159,7 @@ class DataKernel():
 
         return [dtTableStart, dtTableEnd]
 
-    def Write(self, data, date, sensType):
+    def Write(self, data, date):
         '''Write data to disk
 
         data 's datastruct just like this:
@@ -176,13 +178,13 @@ class DataKernel():
             os.mkdir(self.path)
 
         for ch in chs:
-            table = 'Acceleration' + date
+            table = self.tableType[self.sensType] + date
             
-            print 'Now Writing data to ' + self.path + sensType + '_' \
+            print 'Now Writing data to ' + self.path + self.sensType + '_' \
                 + ch + self.dtTable[table][0].strftime('_%Y.%m.%d.%H.%M.%S') + self.dtTable[table][1].strftime('_%Y.%m.%d.%H.%M.%S.txt') + ' ...'
             
             # thread.start_new_thread(self.WriteCh, (data, path, key, ch, table))
-            with open(self.path + sensType + '_' + ch + \
+            with open(self.path + self.sensType + '_' + ch + \
                 self.dtTable[table][0].strftime('_%Y.%m.%d.%H.%M.%S') + \
                 self.dtTable[table][1].strftime('_%Y.%m.%d.%H.%M.%S.txt'), 'w') as f:
 
