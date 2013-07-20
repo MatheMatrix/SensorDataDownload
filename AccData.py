@@ -7,8 +7,9 @@ class AcceData(DataKernel):
         '''Init some argvs
         '''
 
-        DataKernel.__init__(self, server, db, uid, pwd, paras, path)
+        DataKernel.__init__(self, server, db, uid, pwd, path)
 
+        self.paras = paras
         self.sensType = sensType
 
     def GetChdata(self, start, end, table):
@@ -24,7 +25,7 @@ class AcceData(DataKernel):
         cursor = conn.cursor()
         data = {}
 
-        dtTableStart, dtTableEnd = self.TableTime(table, start)
+        dtTableStart, dtTableEnd = self.TableTime(table)
         for i in range(start, end + 1): # end + 1 to execute to the end channel
 
             print 'Getting data of ch {0} in table: {1}'.format(str(i), table)
@@ -52,6 +53,7 @@ class AcceData(DataKernel):
 
         ch should be a string like: ch1
         row should be a bytearray
+        return row likes: [6401, 4353, 3841, ... ]
         '''
 
         row = struct.unpack('<' + 'h' * 200, buffer(row))

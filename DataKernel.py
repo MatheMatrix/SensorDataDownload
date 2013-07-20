@@ -8,7 +8,7 @@ import os
 class DataKernel():
     """load Acceleration data from remote data server"""
 
-    def __init__(self, server, db, uid, pwd, paras, path):
+    def __init__(self, server, db, uid, pwd, path):
         '''Init some argvs
         '''
 
@@ -16,7 +16,6 @@ class DataKernel():
         self.db = db
         self.uid = uid
         self.pwd = pwd
-        self.paras = paras
         self.path = path
 
         self.tableType = {'Acce':'Acceleration', 'Obli':'Obliquitous', 'Strain':'Strain'}
@@ -115,7 +114,7 @@ class DataKernel():
 
         return [start, end]
 
-    def TableTime(self, table, ch):
+    def TableTime(self, table):
         '''find Table's start and end time in the quary's period
 
         table should be table's name
@@ -132,7 +131,7 @@ class DataKernel():
         self.dtEndSQL = dtEnd
 
         cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table) + \
-            " where [DateTime] between ".format(ch) + \
+            " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] asc".format(dtStart, dtEnd)
         cursor.execute(cmd)
         row = cursor.fetchall()
@@ -143,7 +142,7 @@ class DataKernel():
             dtTableStart = row[0][0]
 
         cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table) + \
-            " where [DateTime] between ".format(ch) + \
+            " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] desc".format(dtStart, dtEnd)
         cursor.execute(cmd)
         row = cursor.fetchall()
