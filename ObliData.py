@@ -1,7 +1,7 @@
 from DataKernel import *
 
 class ObliData(DataKernel):
-    """load Acceleration data from remote data server"""
+    """load Obliquitous data from remote data server"""
 
     def __init__(self, server, db, uid, pwd, path, sensType):
         '''Init some argvs

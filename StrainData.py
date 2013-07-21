@@ -2,7 +2,7 @@ from DataKernel import *
 from ctypes import *
 
 class StrainData(DataKernel):
-    """load Acceleration data from remote data server"""
+    """load Strain data from remote data server"""
 
     def __init__(self, server, db, uid, pwd, path, sensType):
         '''Init some argvs
