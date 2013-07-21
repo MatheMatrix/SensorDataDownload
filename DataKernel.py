@@ -58,9 +58,15 @@ class DataKernel():
 
         data = {}
         for i in range(len(exists)):
-            data[exists[i][-8:]] = self.GetChdata(chStart, chEnd, exists[i])
-            self.Write(data[exists[i][-8:]], exists[i][-8:])
-            del data[exists[i][-8:]]
+
+            if self.sensType == 'Strain':
+                data[exists[i][-6:]] = self.GetChdata(chStart, chEnd, exists[i])
+                self.Write(data[exists[i][-6:]], exists[i][-6:])
+                del data[exists[i][-6:]]
+            else:
+                data[exists[i][-8:]] = self.GetChdata(chStart, chEnd, exists[i])
+                self.Write(data[exists[i][-8:]], exists[i][-8:])
+                del data[exists[i][-8:]]
 
         return 'OK'
 
@@ -72,10 +78,14 @@ class DataKernel():
         return like [Acceleration20130415, Acceleration20130416]
         '''
 
-        print 'Find tables which exists in SQL server...'
+        print('Find tables which exists in SQL server...')
 
-        start = self.dtStart.strftime('%Y%m%d')
-        end = self.dtEnd.strftime('%Y%m%d')
+        if self.sensType == 'Strain':
+            start = self.dtStart.strftime('%Y%m')
+            end = self.dtEnd.strftime('%Y%m')
+        else:
+            start = self.dtStart.strftime('%Y%m%d')
+            end = self.dtEnd.strftime('%Y%m%d')
 
         conn = self.Connect()
         conn.timeout = 120
@@ -86,7 +96,7 @@ class DataKernel():
         try:
             cursor.execute(cmd)
         except pyodbc.OperationalError:
-            print 'SQL Server quary timeout, the sql server may have some problems'
+            print('SQL Server quary timeout, the sql server may have some problems')
 
         row = cursor.fetchone()
         result = []
@@ -130,9 +140,10 @@ class DataKernel():
         self.dtStartSQL = dtStart
         self.dtEndSQL = dtEnd
 
-        cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table) + \
+        cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table.decode('utf-8')) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] asc".format(dtStart, dtEnd)
+
         cursor.execute(cmd)
         row = cursor.fetchall()
         if row == []:
@@ -141,7 +152,7 @@ class DataKernel():
         else:
             dtTableStart = row[0][0]
 
-        cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table) + \
+        cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table.decode('utf-8')) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] desc".format(dtStart, dtEnd)
         cursor.execute(cmd)
@@ -169,7 +180,7 @@ class DataKernel():
         date should be like: 20130321
         '''
 
-        chs = tuple(data.viewkeys())
+        chs = tuple(data.keys())
 
         if os.path.exists(self.path):
             pass
@@ -177,10 +188,10 @@ class DataKernel():
             os.mkdir(self.path)
 
         for ch in chs:
-            table = self.tableType[self.sensType] + date
+            table = self.tableType[self.sensType] + date.decode('utf-8')
             
-            print 'Now Writing data to ' + self.path + self.sensType + '_' \
-                + ch + self.dtTable[table][0].strftime('_%Y.%m.%d.%H.%M.%S') + self.dtTable[table][1].strftime('_%Y.%m.%d.%H.%M.%S.txt') + ' ...'
+            print('Now Writing data to ' + self.path + self.sensType + '_' \
+                + ch + self.dtTable[table][0].strftime('_%Y.%m.%d.%H.%M.%S') + self.dtTable[table][1].strftime('_%Y.%m.%d.%H.%M.%S.txt') + ' ...')
             
             # thread.start_new_thread(self.WriteCh, (data, path, key, ch, table))
             with open(self.path + self.sensType + '_' + ch + \

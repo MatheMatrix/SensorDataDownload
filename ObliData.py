@@ -32,8 +32,10 @@ class ObliData(DataKernel):
 
         dtTableStart, dtTableEnd = self.TableTime(table)
 
-        data = {}.fromkeys(['ch' + str(i) for i in range(start, end + 1)], [])
-
+        data = {}.fromkeys(['ch' + str(i) for i in range(start, end + 1)])
+        for i in data:
+            data[i] = []
+            
         cmd = "select [Data] from [RiverBai].[dbo].[{0}]".format(table) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] asc".format(self.dtStartSQL, self.dtEndSQL)
@@ -53,7 +55,7 @@ class ObliData(DataKernel):
             row = cursor.fetchone()
             if row:
                 row = self.Format( row[0] )
-
+        
         conn.close()
 
         return data
@@ -94,6 +96,4 @@ class ObliData(DataKernel):
         for i in range(len(row)):
             data['ch' + str(i % 17 + 1)].append(row[i])
 
-        print data
-        exit()
         return data
