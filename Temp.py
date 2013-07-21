@@ -18,3 +18,8 @@ for i in range(1, 192 + 1):
 print a
 print b
 print c
+
+for row in a:
+	for i in row:
+		print i,
+	print '\n',
