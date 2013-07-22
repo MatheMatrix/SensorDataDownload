@@ -5,7 +5,9 @@ import time
 
 # import cProfil
 
-if __name__ == '__main__':
+def AccDataDownloader():
+    '''Download Acceleration data to disk
+    '''
 
     time.clock()
 
@@ -35,5 +37,3 @@ if __name__ == '__main__':
     t.GetData(chStart, chEnd)
 
     print 'Finished in %6.3fs' % time.clock()
-    print 'The program will exit in 5s ...'
-    time.sleep(5)
