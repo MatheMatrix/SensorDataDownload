@@ -37,7 +37,7 @@ class StrainData(DataKernel):
         for i in data:
             data[i] = []
             
-        cmd = "select [WaveLength] from [RiverBai].[dbo].[{0}]".format(table.decode('utf-8')) + \
+        cmd = "select [WaveLength] from [{0}}].[dbo].[{1}]".format(self.db, table.decode('utf-8')) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] asc".format(self.dtStartSQL, self.dtEndSQL)
         try:

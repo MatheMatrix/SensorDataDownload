@@ -74,7 +74,6 @@ class DataKernel():
     def FindExist(self):
         '''Find exist tables with particular dates
 
-        Start, End: DateTime objects like datetime.datetime(2013, 3, 17, 20, 8, 51, 800)
         return like [Acceleration20130415, Acceleration20130416]
         '''
 
@@ -140,7 +139,7 @@ class DataKernel():
         self.dtStartSQL = dtStart
         self.dtEndSQL = dtEnd
 
-        cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table.decode('utf-8')) + \
+        cmd = "select TOP 1 [DateTime] from [{0}}].[dbo].[{1}]".format(self.db, table.decode('utf-8')) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] asc".format(dtStart, dtEnd)
 
@@ -152,7 +151,7 @@ class DataKernel():
         else:
             dtTableStart = row[0][0]
 
-        cmd = "select TOP 1 [DateTime] from [RiverBai].[dbo].[{0}]".format(table.decode('utf-8')) + \
+        cmd = "select TOP 1 [DateTime] from [{0}}].[dbo].[{1}]".format(self.db, table.decode('utf-8')) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] desc".format(dtStart, dtEnd)
         cursor.execute(cmd)

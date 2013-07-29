@@ -36,7 +36,7 @@ class ObliData(DataKernel):
         for i in data:
             data[i] = []
             
-        cmd = "select [Data] from [RiverBai].[dbo].[{0}]".format(table) + \
+        cmd = "select [Data] from [{0}}].[dbo].[{1}]".format(self.db, table) + \
             " where [DateTime] between " + \
             "'{0}' and '{1}' order by [ID] asc".format(self.dtStartSQL, self.dtEndSQL)
 

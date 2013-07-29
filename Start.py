@@ -17,7 +17,7 @@ class DataDownloader(cmd.Cmd):
  help    查询函数
  Acc     从数据库下载加速度数据
  Obli    从数据库下载倾角仪数据
- Starin  从数据库下载光栅光纤数据
+ Strain  从数据库下载光栅光纤数据
  Exit    退出程序
 
  注:配置下载的数据的区间、通道等请打开Config.ini配置

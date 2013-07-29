@@ -31,7 +31,7 @@ class AcceData(DataKernel):
             print 'Getting data of ch {0} in table: {1}'.format(str(i), table)
 
             data['ch' + str(i)] = []
-            cmd = "select [Data] from [RiverBai].[dbo].[{0}]".format(table) + \
+            cmd = "select [Data] from [{0}}].[dbo].[{1}]".format(self.db, table) + \
                 " where [ChannelID] = {0} and ([DateTime] between ".format(i) + \
                 "'{0}' and '{1}') order by [ID] asc".format(self.dtStartSQL, self.dtEndSQL)
             try:
